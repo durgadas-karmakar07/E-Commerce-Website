@@ -1,3 +1,5 @@
+import { fallbackCategories, fallbackProducts } from './fallbackData';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const getAuthToken = (): string | null => {
@@ -67,6 +69,39 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     return data as T;
   } catch (error: any) {
     if (error instanceof ApiError) throw error;
+
+    // Graceful offline fallback for public catalog if backend is not reachable on Netlify
+    if (options.method === undefined || options.method === 'GET') {
+      if (endpoint.includes('/products/featured')) {
+        return { success: true, products: fallbackProducts.slice(0, 4) } as any;
+      }
+      if (endpoint.includes('/products/bestsellers')) {
+        return { success: true, products: fallbackProducts.slice(2, 6) } as any;
+      }
+      if (endpoint.includes('/products/')) {
+        const id = endpoint.split('/products/')[1]?.split('?')[0];
+        const prod = fallbackProducts.find((p) => p._id === id || p.slug === id) || fallbackProducts[0];
+        return { success: true, product: prod, data: prod } as any;
+      }
+      if (endpoint.startsWith('/products')) {
+        return {
+          success: true,
+          products: fallbackProducts,
+          data: fallbackProducts,
+          pagination: { total: fallbackProducts.length, page: 1, limit: 20 },
+        } as any;
+      }
+      if (endpoint.startsWith('/categories')) {
+        return { success: true, categories: fallbackCategories, data: fallbackCategories } as any;
+      }
+      if (endpoint.includes('/coupons')) {
+        return {
+          success: true,
+          coupons: [{ code: 'FESTIVE25', discountPercent: 25, minOrderAmount: 2999 }],
+        } as any;
+      }
+    }
+
     throw new ApiError(error.message || 'Network error occurred. Please check your connection.', 500);
   }
 }

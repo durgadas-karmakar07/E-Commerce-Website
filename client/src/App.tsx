@@ -1,5 +1,17 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+
+const SpaRedirectHandler: React.FC = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const redirectPath = params.get('p');
+    if (redirectPath) {
+      navigate(decodeURIComponent(redirectPath), { replace: true });
+    }
+  }, [navigate]);
+  return null;
+};
 
 // Providers
 import { ToastProvider } from './context/ToastContext';
@@ -55,6 +67,7 @@ import AdminAuditLogsPage from './pages/admin/AdminAuditLogsPage';
 export function App() {
   return (
     <BrowserRouter>
+      <SpaRedirectHandler />
       <ToastProvider>
         <AuthProvider>
           <CartProvider>

@@ -1,0 +1,40 @@
+import { Router } from 'express';
+import authRoutes from './authRoutes.js';
+import productRoutes from './productRoutes.js';
+import categoryRoutes from './categoryRoutes.js';
+import cartRoutes from './cartRoutes.js';
+import wishlistRoutes from './wishlistRoutes.js';
+import orderRoutes from './orderRoutes.js';
+import paymentRoutes from './paymentRoutes.js';
+import reviewRoutes from './reviewRoutes.js';
+import couponRoutes from './couponRoutes.js';
+import inventoryRoutes from './inventoryRoutes.js';
+import customerRoutes from './customerRoutes.js';
+import analyticsRoutes from './analyticsRoutes.js';
+import reportsRoutes from './reportsRoutes.js';
+import healthRoutes from './healthRoutes.js';
+import bugRoutes from './bugRoutes.js';
+import notificationRoutes from './notificationRoutes.js';
+import auditLogRoutes from './auditLogRoutes.js';
+
+const router = Router();
+
+router.use('/auth', authRoutes);
+router.use('/products', productRoutes);
+router.use('/categories', categoryRoutes);
+router.use('/cart', cartRoutes);
+router.use('/wishlist', wishlistRoutes);
+router.use('/orders', orderRoutes);
+router.use('/payments', paymentRoutes);
+router.use('/reviews', reviewRoutes);
+router.use('/coupons', couponRoutes);
+router.use('/inventory', inventoryRoutes);
+router.use('/customers', customerRoutes);
+router.use('/analytics', analyticsRoutes);
+router.use('/reports', reportsRoutes);
+router.use('/health', healthRoutes);
+router.use('/bugs', bugRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/audit-logs', auditLogRoutes);
+
+export default router;
